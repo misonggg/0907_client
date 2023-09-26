@@ -7,6 +7,14 @@ import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useAuthState } from "@/context/auth";
+import { BiSolidCoffeeTogo, BiSolidEditAlt } from "react-icons/bi";
+import {
+  FcHome,
+  FcDislike,
+  FcLike,
+  FcDownRight,
+  FcVoicePresentation,
+} from "react-icons/fc";
 
 type Props = {
   comment: Comment;
@@ -41,55 +49,57 @@ function CommentSection({ comment, vote, postIdentifier, mutate }: Props) {
   };
 
   return (
-    <div>
-      <div
-        className="flex flex-row border border-gray-300 m-1 w-full"
-        key={comment.identifier}
-      >
-        <div className="flex flex-col w-4/5">
-          <Link href={`/u/${comment.username}`}>{comment.username}</Link>
-          <p>{comment.voteScore}</p>
-          <p>포스트 identifier : {comment.post?.identifier}</p>
-          <p>{dayjs(comment.createdAt).format("YYYY-MM-DD HH:mm")}</p>
-          <p>{comment.body}</p>
-          <p>{comment.identifier}</p>
-          <p className="text-blod text-red-400">{comment.userVote}</p>
+    <div className="border-b border-gray-200 px-3 py-2 relative bg-white">
+      <div className="flex" key={comment.identifier}>
+        <div className="flex flex-col">
+          <div className="flex flex-col">
+            <div className="flex flex-row items-center">
+              {/* 추후 유저 이미지로 대체 */}
+              <p className="w-4 h-4 md:w-6 md:h-6 bg-gray-200 rounded-full mr-1"></p>
+              <p className="font-semibold mr-4">{comment.username}</p>
+              <p className="text-xs text-gray-400">
+                {dayjs(comment.createdAt).format("MM/DD HH:mm")}
+              </p>
+            </div>
+            <p className="text-sm py-1">{comment.body}</p>
+          </div>
+
           {authenticated && comment.username === user?.username && (
             <div>
               <button
-                className="bg-blue-500 p-1 text-white w-20 mr-4"
+                className="bg-red-300 p-1 text-white w-fit mr-2 text-sm rounded-full hover:bg-red-400"
                 onClick={() => deleteComment(comment.identifier)}
               >
-                삭제하기
+                <BiSolidCoffeeTogo />
               </button>
               <button
-                className="bg-blue-500 p-1 text-white w-20"
+                className="bg-blue-300 p-1 text-white w-fit mr-2 text-sm rounded-full hover:bg-blue-400"
                 onClick={() => editCommentPage()}
               >
-                수정하기
+                <BiSolidEditAlt />
               </button>
             </div>
           )}
         </div>
-        <div className="flex flex-col w-1/5 items-center">
+        {/* <div className="flex items-center absolute right-2">
           <button
-            className={classNames("m-1", {
-              "text-red-500": comment.userVote === 1,
+            className={classNames("hover:opacity-50 text-lg", {
+              "bg-red-200 p-0.5 rounded-full": comment.userVote === 1,
             })}
-            onClick={() => vote(1, comment)}
+            onClick={() => vote(1)}
           >
-            좋아요
+            <FcLike />
           </button>
-          <p>{comment.voteScore}</p>
+          <p className="px-2">{comment.voteScore}</p>
           <button
-            className={classNames("m-1", {
-              "text-blue-500": comment.userVote === -1,
+            className={classNames("hover:opacity-50 text-lg", {
+              "bg-blue-200 p-0.5 rounded-full": comment.userVote === -1,
             })}
-            onClick={() => vote(-1, comment)}
+            onClick={() => vote(-1)}
           >
-            싫어요
+            <FcDislike />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

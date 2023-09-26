@@ -111,14 +111,17 @@ function SubsPostNew() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col px-10">
-      <p>{subName}에서 포스트 생성하기</p>
+    <div className="w-full md:max-w-2xl mx-auto flex flex-col px-2">
+      <div className="flex items-center">
+        <p className="py-2 font-semibold md:text-lg mr-1">✏️ {subName}</p>
+        <p className="text-gray-400 text-sm md:text-md">에서 포스트 생성하기</p>
+      </div>
       <form onSubmit={submitPost} className="relative">
         <input
           type="text"
           placeholder="제목"
           maxLength={30}
-          className="w-full  border border-gray-300 outline-none focus:border-black mb-10"
+          className="w-full border border-gray-300 outline-none focus:border-black mb-10 px-2 py-1"
           value={title}
           onChange={(e) => {
             if (e.target.value.length <= 20) {
@@ -128,9 +131,9 @@ function SubsPostNew() {
         />
         <p
           style={{ top: 10, right: 10 }}
-          className="absolute text-sm text-blue-500 select-none"
+          className="absolute text-sm text-blue-500 select-none mb-1"
         >
-          {title.trim().length}/20
+          {title.trim().length} / 20
         </p>
         <ReactQuill
           ref={quillRef}
@@ -141,7 +144,7 @@ function SubsPostNew() {
           modules={modules}
           className="mb-16"
         />
-        <button className="bg-blue-500 text-white px-2 py-1 w-20">
+        <button className="bg-blue-500 text-white rounded-full px-2 py-1 w-20 items-center mb-3 self-end">
           게시하기
         </button>
       </form>

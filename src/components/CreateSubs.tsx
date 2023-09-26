@@ -34,11 +34,12 @@ function CreateSubs() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center pt-10">
-      <div className="flex flex-col">
-        <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center pt-2 md:pt-5 w-full">
+      <div className="flex flex-col items-center justify-center w-full">
+        <p className="font-semibold mb-5">커뮤니티 생성</p>
+        <form onSubmit={handleSubmit} className="w-full px-3 md:w-3/5 lg:w-2/5">
           <div>
-            <p className="text-sm text-gray-400 py-1">
+            <p className="text-sm text-gray-400 py-1 pl-3">
               커뮤니티 이름은 변경할 수 없습니다.
             </p>
             <InputGroup
@@ -49,19 +50,19 @@ function CreateSubs() {
             />
           </div>
           <div>
-            <p className="text-sm text-gray-400 py-1">
-              커뮤니티 제목을 입력해주세요.
+            <p className="text-sm text-gray-400 py-1 pl-3">
+              커뮤니티를 한 줄로 설명해주세요.
             </p>
             <InputGroup
-              placeholder="커뮤니티 제목"
+              placeholder="커뮤니티 한줄"
               value={title}
               setValue={setTitle}
               error={errors.title}
             />
           </div>
           <div>
-            <p className="text-sm text-gray-400 py-1">
-              해당 커뮤니티에 대한 설명을 입력해주세요.
+            <p className="text-sm text-gray-400 py-1 pl-3">
+              해당 커뮤니티에 대한 보다 자세한 설명을 입력해주세요.
             </p>
             <InputGroup
               placeholder="커뮤니티 설명"
@@ -70,7 +71,7 @@ function CreateSubs() {
               error={errors.description}
             />
           </div>
-          <button className="px-2 py-1 bg-blue-500 text-white mt-3 w-full">
+          <button className="px-3 py-2 rounded-full bg-blue-500 text-white mt-3 w-full">
             커뮤니티 생성하기
           </button>
         </form>

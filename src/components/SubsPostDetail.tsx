@@ -11,6 +11,13 @@ import dayjs from "dayjs";
 import { useAuthState } from "@/context/auth";
 import classNames from "classnames";
 import CommentSection from "./CommentSection";
+import {
+  FcHome,
+  FcDislike,
+  FcLike,
+  FcDownRight,
+  FcVoicePresentation,
+} from "react-icons/fc";
 
 function SubsPostDetail() {
   const { authenticated, user, isAdmin } = useAuthState();
@@ -126,101 +133,180 @@ function SubsPostDetail() {
   };
 
   return (
-    <div className="flex flex-col w-full">
-      {(ownSub || isAdmin) && (
-        <div>
-          <button
-            className="bg-blue-500 p-1 text-white w-20 mr-2"
-            onClick={() => deletePost(post?.identifier)}
-          >
-            삭제하기
-          </button>
-          <button
-            className="bg-blue-500 p-1 text-white w-20"
-            onClick={() => editPostPage()}
-          >
-            수정하기
-          </button>
-        </div>
-      )}
-      <button>팔로우</button>
-      <div className="w-4/5 p-3 m-10 border border-gray-400 flex flex-col">
-        {post && (
-          <>
-            <p dangerouslySetInnerHTML={{ __html: `바디 : ${post.body}` }}></p>
-            <p>코멘트 카운트 : {post.commentCount}</p>
-            <p>유저 보트 : {post.userVote}</p>
-            <p>아이덴티피어 : {post.identifier}</p>
-            <p>슬러그 : {post.slug}</p>
-            <p>{dayjs(post.createdAt).format("YYYY-MM-DD HH:mm")}</p>
-            <p>섭네임 : {post.sub?.name}</p>
-            <p>포스트 타이틀 : {post.title}</p>
-            <Link href={`/u/${post.username}`} className="hover:underline">
-              쓴 사람 : {post.username}
-            </Link>
-          </>
-        )}
-        <div className="flex flex-col items-center">
-          <button
-            className={classNames("m-1", {
-              "text-red-500": post?.userVote === 1,
-            })}
-            onClick={() => vote(1)}
-          >
-            좋아요
-          </button>
-          <p>{post?.voteScore}</p>
-          <button
-            className={classNames("m-1", {
-              "text-blue-500": post?.userVote === -1,
-            })}
-            onClick={() => vote(-1)}
-          >
-            싫어요
-          </button>
-        </div>
-      </div>
-      {/* 댓글 */}
-      <div className="flex flex-col border border-gray-400 m-2 p-2">
-        {authenticated ? (
-          <div>
-            <Link href={`/u/${user?.username}`} className="hover:underline">
-              유저네임 {user?.username}으로 댓글 작성
-            </Link>
-            <form onSubmit={handleSubmit}>
-              <textarea
-                className="w-full border border-gray-400 focus:outline-none focus:border-black"
-                onChange={(e) => setNewComment(e.target.value)}
-                value={newComment}
-              ></textarea>
-              <button
-                className="bg-gray-500 text-white px-2 py-1"
-                disabled={newComment.trim() == ""}
-              >
-                게시하기
-              </button>
-            </form>
+    <div className="flex flex-row w-full">
+      <div className="md:w-4/5 w-full flex flex-col">
+        <div className="p-2 flex flex-col">
+          {post && (
+            <div className="flex flex-col">
+              <div className="flex flex-row mb-3">
+                <div className="flex flex-row px-2 py-1 bg-gray-200 w-fit rounded-full items-center mr-2">
+                  <img
+                    src={post.sub?.imageUrl}
+                    alt="포스트 커뮤니티 이미지"
+                    className="w-6 h-6 rounded-full mr-1"
+                  />
+                  <Link
+                    href={`/c/${post.subname}`}
+                    className="text-sm hover:underline"
+                  >
+                    {post.subname}
+                  </Link>
+                </div>
+                <p className="font-semibold md:text-lg">{post.title}</p>
+              </div>
+              <div className="flex flex-row items-center pb-3 border-b border-gray-300">
+                <div className="flex flex-row items-center mr-3 pl-2">
+                  {/* 나중에 유저 이미지로 바꿔주기 */}
+                  <img
+                    src={post.sub?.imageUrl}
+                    alt="포스트 커뮤니티 이미지"
+                    className="w-6 h-6 rounded-full mr-1"
+                  />
+                  <Link
+                    href={`/u/${post.username}`}
+                    className="font-semibold text-sm hover:underline"
+                  >
+                    {post.username}
+                  </Link>
+                </div>
+                <p className="text-gray-400 text-sm mr-3">
+                  {dayjs(post.createdAt).format("YYYY-MM-DD HH:mm")}
+                </p>
+                <p className="text-sm">📍 {post.voteScore}</p>
+              </div>
+              <div className="py-3">
+                {(ownSub || isAdmin) && (
+                  <div className="flex justify-end mb-2">
+                    <button
+                      className="bg-red-400 px-2 py-1 text-white w-fit mr-2 text-sm rounded-full"
+                      onClick={() => deletePost(post?.identifier)}
+                    >
+                      삭제하기
+                    </button>
+                    <button
+                      className="bg-blue-500 px-2 py-1 text-white w-fit text-sm rounded-full"
+                      onClick={() => editPostPage()}
+                    >
+                      수정하기
+                    </button>
+                  </div>
+                )}
+                <p
+                  dangerouslySetInnerHTML={{ __html: `${post.body}` }}
+                  className=""
+                ></p>
+              </div>
+            </div>
+          )}
+          {/* <div className="flex items-center mt-3 justify-center">
+            <button
+              onClick={() => vote(1)}
+              className="flex hover:opacity-50 items-center"
+            >
+              <p className="text-xs mr-1">좋아요</p>
+              <FcLike
+                className={classNames(
+                  "text-3xl flex items-center p-1 bg-white rounded-full",
+                  {
+                    "bg-red-200 ": post?.userVote === 1,
+                  }
+                )}
+              />
+            </button>
+            <p className="px-3 text-xl">{post?.voteScore}</p>
+            <button
+              onClick={() => vote(-1)}
+              className="flex hover:opacity-50 items-center"
+            >
+              <FcDislike
+                className={classNames(
+                  "text-3xl items-center p-1 bg-white rounded-full",
+                  {
+                    "bg-blue-200": post?.userVote === -1,
+                  }
+                )}
+              />
+              <p className="text-xs ml-1">싫어요</p>
+            </button>
+          </div> */}
+          <div className="flex items-center mt-3 justify-center">
+            <button
+              className={classNames(
+                "hover:opacity-50 flex items-center px-2 py-1",
+                {
+                  "bg-red-100  rounded-full": post?.userVote === 1,
+                }
+              )}
+              onClick={() => vote(1)}
+            >
+              <p className="text-xs mr-1">좋아요</p>
+              <FcLike className="text-3xl" />
+            </button>
+            <p className="px-2">{post?.voteScore}</p>
+            <button
+              className={classNames(
+                "hover:opacity-50 flex items-center px-2 py-1",
+                {
+                  "bg-blue-100 rounded-full": post?.userVote === -1,
+                }
+              )}
+              onClick={() => vote(-1)}
+            >
+              <FcDislike className="text-3xl" />
+              <p className="text-xs ml-1">싫어요</p>
+            </button>
           </div>
-        ) : (
-          <div>
-            <p>로그인을 하고 댓글을 남겨보세용.</p>
-            <Link href="/login">로그인하러 가기</Link>
-          </div>
-        )}
-      </div>
-      {/* 댓글 리스트 */}
-      {post &&
-        comments?.map((comment) => (
-          <CommentSection
-            comment={comment}
-            vote={vote}
-            postIdentifier={post!.identifier}
-            mutate={commentMutate}
-            key={comment.identifier}
-          />
-        ))}
+        </div>
 
-      <div className="w-1/5">{post?.sub && <SubsSideBar sub={post.sub} />}</div>
+        {/* 댓글 */}
+        <div className="p-1">
+          {/* 댓글 리스트 */}
+          {post &&
+            comments?.map((comment) => (
+              <CommentSection
+                comment={comment}
+                vote={vote}
+                postIdentifier={post!.identifier}
+                mutate={commentMutate}
+                key={comment.identifier}
+              />
+            ))}
+          {authenticated ? (
+            <div className="my-4 px-2">
+              <div className="flex items-center px-2">
+                <Link href={`/u/${user?.username}`} className="hover:underline">
+                  {user?.username}
+                </Link>
+                <p className="text-gray-400 text-sm">으로 댓글 작성</p>
+              </div>
+              <form onSubmit={handleSubmit} className="flex flex-col">
+                <textarea
+                  className="w-full border border-gray-300 rounded-md bg-gray-100 p-1 md:p-2 focus:outline-none focus:border-black"
+                  onChange={(e) => setNewComment(e.target.value)}
+                  value={newComment}
+                ></textarea>
+                <button
+                  className="bg-blue-500 text-white px-3 py-1 rounded-full w-fit self-end mt-2"
+                  disabled={newComment.trim() == ""}
+                >
+                  게시하기
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="p-4">
+              <p className=" text-gray-500">로그인을 하고 댓글을 남겨보세용.</p>
+              <Link href="/login" className="text-blue-500">
+                로그인하러 가기
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="w-1/5 hidden md:block">
+        {post?.sub && <SubsSideBar sub={post.sub} />}
+      </div>
     </div>
   );
 }

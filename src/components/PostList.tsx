@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import useSWR, { mutate } from "swr";
 import axios from "axios";
-import SubsPostCard from "./SubsPostCard";
+import PostCard from "./PostCard";
+import { ClipLoader } from "react-spinners";
 
 function PostList() {
   // 무한 로딩 부분
@@ -47,7 +48,11 @@ function PostList() {
 
   return (
     <div className="w-full">
-      {isInitialLoading && <p>로딩 중</p>}
+      {isInitialLoading && (
+        <p className="absolute top-1/2 left-1/2">
+          <ClipLoader color="#000000" size={40} />
+        </p>
+      )}
       {/* 무한 로딩 부분 */}
       {/* {posts?.map((post) => (
         <SubsPostCard post={post} key={post.identifier} />
@@ -55,30 +60,26 @@ function PostList() {
       <div className="flex flex-col">
         {posts?.map((post) => (
           <div key={post.identifier}>
-            <SubsPostCard
-              post={post}
-              key={post.identifier}
-              subMutate={mutate}
-            />
+            <PostCard post={post} key={post.identifier} subMutate={mutate} />
           </div>
         ))}
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-between my-5 px-5">
           <button
             onClick={() => {
               if (pageIndex > 0) {
                 setPageIndex(pageIndex - 1);
               }
             }}
-            className="p-2 bg-blue-500 text-white"
+            className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:opacity-60"
           >
-            Previous
+            이전페이지
           </button>
           <p className="text-bold p-2 mx-5">{currentPage}</p>
           <button
             onClick={() => setPageIndex(pageIndex + 1)}
-            className="p-2 bg-blue-500 text-white"
+            className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:opacity-60"
           >
-            Next
+            다음페이지
           </button>
         </div>
       </div>

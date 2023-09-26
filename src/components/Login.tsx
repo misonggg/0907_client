@@ -40,7 +40,7 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full h-grow px-3 md:max-w-xl">
       <form onSubmit={handleSubmit} className="">
         <InputGroup
           placeholder="이메일"
@@ -54,14 +54,20 @@ function Login() {
           setValue={setPassword}
           error={errors.password}
         />
-        <button className="px-2 py-1 bg-blue-500 text-white mt-3 w-full">
+        <button className="p-2 rounded-full bg-blue-500 text-white mt-3 w-full">
           로그인하기
         </button>
       </form>
-      <small className="py-3">
+      <small className="py-1 pt-2">
         아직 아이디가 없나요?
         <Link href="/register" className="text-blue-500">
           회원가입
+        </Link>
+      </small>
+      <small className="py-3">
+        비밀번호를 까먹었다면,
+        <Link href="/register" className="text-blue-500">
+          비밀번호 찾기
         </Link>
       </small>
     </div>

@@ -34,7 +34,7 @@ function Register() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full h-grow px-3 md:max-w-xl">
       <form onSubmit={handleSubmit} className="">
         <InputGroup
           placeholder="닉네임"
@@ -55,7 +55,7 @@ function Register() {
           setValue={setPassword}
           error={errors.password}
         />
-        <button className="px-2 py-1 bg-blue-500 text-white mt-3 w-full">
+        <button className="p-2 bg-blue-500 rounded-full text-white mt-3 w-full">
           회원가입하기
         </button>
       </form>

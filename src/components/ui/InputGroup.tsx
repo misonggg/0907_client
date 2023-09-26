@@ -23,9 +23,12 @@ const InputGroup: React.FC<InputGroupProps> = ({
       <input
         type={type}
         style={{ minWidth: 300 }}
-        className={cls(`w-full px-3 py-2 border bg-gray-200 outline-none`, {
-          "border-red-500": error,
-        })}
+        className={cls(
+          `w-full px-3 py-2 border rounded-full bg-gray-200 outline-none`,
+          {
+            "border-red-500": error,
+          }
+        )}
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}

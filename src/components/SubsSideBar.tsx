@@ -12,21 +12,23 @@ type Props = {
 function SubsSideBar({ sub }: Props) {
   const { authenticated } = useAuthState();
   return (
-    <div className="bg-white border border-gray-300 w-full p-2">
-      <div>
-        <p>커뮤니티에 대하여</p>
-        <p>섭 만들어진 날짜 :{dayjs(sub?.createdAt).format("YYYY.MM.DD")}</p>
-        <p>섭 네임 : {sub?.name}</p>
-        <p>섭 설명 : {sub?.description}</p>
-        <p>섭 포스트 카운트 : {sub?.postCount}</p>
-        <p>섭 타이틀 : {sub?.title}</p>
-        <p>섭 유저네임 : {sub?.username}</p>
+    <div className="w-full flex flex-col items-center mt-2 p-2">
+      <div className="w-full px-1">
+        <p className="font-semibold border-b border-gray-400 pb-2">
+          {sub?.name}
+        </p>
+        <p className="font-semibold text-sm mt-2">{sub?.title}</p>
+        <p className="text-sm">
+          🎂 {dayjs(sub?.createdAt).format("YYYY년 MM월 DD일")}
+        </p>
+        <p className="text-sm">{sub?.postCount}개의 포스트</p>
+        <p className="text-sm">by @ {sub?.username}</p>
       </div>
       {authenticated && (
-        <div>
+        <div className="mt-3 w-full">
           <Link
             href={`/c/${sub?.name}/new`}
-            className="px-2 py-1 bg-gray-500 text-white"
+            className="text-sm px-3 py-1 bg-blue-400 text-white rounded-full w-full hover:bg-blue-500"
           >
             포스트 생성
           </Link>

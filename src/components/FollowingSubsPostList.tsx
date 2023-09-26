@@ -5,6 +5,7 @@ import useSWR, { mutate } from "swr";
 import axios from "axios";
 import SubsPostCard from "./SubsPostCard";
 import { useAuthState } from "@/context/auth";
+import PostCard from "./PostCard";
 
 function FollowingSubsPostList() {
   const { authenticated, user } = useAuthState();
@@ -29,35 +30,31 @@ function FollowingSubsPostList() {
   const currentPage = pageIndex + 1;
 
   return (
-    <div className="w-full">
+    <div className="md:max-w-2xl m-auto">
       {isInitialLoading && <p>로딩 중</p>}
       <div className="flex flex-col">
         {posts?.map((post) => (
           <div key={post.identifier}>
-            <SubsPostCard
-              post={post}
-              key={post.identifier}
-              subMutate={mutate}
-            />
+            <PostCard post={post} key={post.identifier} subMutate={mutate} />
           </div>
         ))}
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-between my-5 px-5">
           <button
             onClick={() => {
               if (pageIndex > 0) {
                 setPageIndex(pageIndex - 1);
               }
             }}
-            className="p-2 bg-blue-500 text-white"
+            className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:opacity-60"
           >
-            Previous
+            이전페이지
           </button>
-          <p className="text-bold p-2 mx-5">{currentPage}</p>
+          {/* <p className="text-bold p-2 mx-5">{currentPage}</p> */}
           <button
             onClick={() => setPageIndex(pageIndex + 1)}
-            className="p-2 bg-blue-500 text-white"
+            className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:opacity-60"
           >
-            Next
+            다음페이지
           </button>
         </div>
       </div>

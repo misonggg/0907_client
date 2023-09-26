@@ -7,6 +7,13 @@ import dayjs from "dayjs";
 import { useAuthState } from "@/context/auth";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
+import {
+  FcHome,
+  FcDislike,
+  FcLike,
+  FcDownRight,
+  FcVoicePresentation,
+} from "react-icons/fc";
 
 type Props = {
   post: Post;
@@ -16,7 +23,6 @@ type Props = {
 function SubsPostCard({ post, subMutate }: Props) {
   const router = useRouter();
   const pathname = decodeURIComponent(usePathname());
-  const isInSubPage = pathname.includes("/c/");
 
   const { authenticated } = useAuthState();
   const vote = async (value: number) => {
@@ -38,56 +44,43 @@ function SubsPostCard({ post, subMutate }: Props) {
   };
 
   return (
-    <div className="border border-gray-400 p-2 m-1 w-full">
-      <p>포스트 카드</p>
-      <div className="w-full">
-        {post.sub && (
-          <img src={post.sub.imageUrl} alt="" className="w-10 h-10" />
-        )}
-        <Link
-          href={`/c/${post.subname}/${post.identifier}`}
-          className="hover:opacity-50 cursor-pointer"
-        >
-          1: {post.title}
+    <div className="w-full p-3 border-b border-gray-300 items-center">
+      <div className="flex flex-col">
+        <Link href={`/c/${post.subname}/${post.identifier}`} className="mb-1">
+          <p className="w-full block font-semibold line-clamp-1 truncate">
+            {post.title}
+          </p>
+          <p className="w-full block text-sm line-clamp-1 truncate">
+            {post.body}
+          </p>
         </Link>
-        <p dangerouslySetInnerHTML={{ __html: `바디 : ${post.body}` }}></p>
-        {/* <p className="text-sm">2 : {post.body}</p> */}
-        <p className="text-sm">3 : {post.commentCount}</p>
-        <p className="text-sm">
-          4 : {dayjs(post.createdAt).format("YYYY.MM.DD")}
-        </p>
-        <p className="text-sm">5 : {post.identifier}</p>
-        <p className="text-sm">6 섭 네임 : {post.subname}</p>
-
-        <Link
-          href={`/u/${post.username}`}
-          className="text-sm font-bold text-red-500"
-        >
-          {post.username}
-        </Link>
-      </div>
-
-      <div className="flex flex-col items-start m-2">
-        <button
-          className={classNames("m-1", {
-            "text-red-500": post.userVote === 1,
-          })}
-          onClick={() => vote(1)}
-        >
-          좋아요
-        </button>
-        <p>{post.voteScore}</p>
-        <button
-          className={classNames("m-1", {
-            "text-blue-500": post.userVote === -1,
-          })}
-          onClick={() => vote(-1)}
-        >
-          싫어요
-        </button>
-        {isInSubPage && (
-          <div className="my-2">이 페이지는 subs내에 있습니다.</div>
-        )}
+        <div className="flex">
+          <div>
+            <p className="cursor-pointer mr-8 flex items-center">
+              <FcVoicePresentation className="mr-1 text-xl" />
+              <p className="">댓글 {post.commentCount}</p>
+            </p>
+          </div>
+          <div className="flex items-center">
+            <button
+              className={classNames("hover:opacity-50 text-lg", {
+                "bg-red-200 p-0.5 rounded-full": post.userVote === 1,
+              })}
+              onClick={() => vote(1)}
+            >
+              <FcLike />
+            </button>
+            <p className="px-2">{post.voteScore}</p>
+            <button
+              className={classNames("hover:opacity-50 text-lg", {
+                "bg-blue-200 p-0.5 rounded-full": post.userVote === -1,
+              })}
+              onClick={() => vote(-1)}
+            >
+              <FcDislike />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

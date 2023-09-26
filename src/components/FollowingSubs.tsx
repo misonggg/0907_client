@@ -24,42 +24,37 @@ function FollowingSubs() {
   const { data: subs } = useSWR<Sub[]>(apiUrl, fetcher);
 
   return (
-    <div className="bg-white border border-gray-400 flex flex-col items-center">
-      <div className="flex flex-col">
+    <div className="flex flex-col bg-white items-center w-full mt-2">
+      <div className="flex flex-col w-full">
+        <div className="flex items-center py-2 border-b border-gray-300 px-3">
+          <p className="font-semibold">내가 가입한 커뮤니티</p>
+        </div>
         {subs?.map((sub) => (
-          <div key={sub.name} className="m-1 flex flex-row">
+          <div key={sub.name} className="m-1 flex flex-row mt-2 px-1">
             <Link
               href={`/c/${sub.name}`}
-              className="flex flex-row items-center"
+              className="flex flex-row items-center hover:underline"
             >
               <img
                 src={sub.imageUrl}
                 alt=""
-                className="w-10 h-10 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover"
               />
-              <p className="text-sm font-bold ml-2">{sub.name}</p>
+              <p className="text-sm ml-2">{sub.name}</p>
             </Link>
           </div>
         ))}
 
         {subs && subs.length === 0 && (
-          <p className="text-xs p-1">팔로우하고 있는 커뮤니티가 없습니다.</p>
+          <p className="text-xs p-2">팔로우하고 있는 커뮤니티가 없습니다. 🔇</p>
         )}
-
-        <div className="mt-10 flex">
-          {authenticated && (
-            <Link
-              href="/community/new"
-              className="bg-blue-500 px-3 py-1 text-white"
-            >
-              커뮤니티 생성
-            </Link>
-          )}
-        </div>
       </div>
       {subs && subs.length >= 1 && (
-        <Link href={`/u/${user?.username}/posts`} className="text-xs py-3">
-          가입한 커뮤니티의 글만 보아보기
+        <Link
+          href={`/u/${user?.username}/posts`}
+          className="text-xs py-3 px-1 hover:font-bold"
+        >
+          내가 가입한 커뮤니티의 글만 보아보기 👉🏻
         </Link>
       )}
     </div>

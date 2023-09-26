@@ -4,11 +4,12 @@ import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { useAuthState } from "@/context/auth";
-import SubsSideBar from "./SubsSideBar";
-import SubsPostList from "./SubsPostCard";
-import { useSearchParams } from "next/navigation";
+import dayjs from "dayjs";
 import { Post } from "@/types";
 import SubsPostCard from "./SubsPostCard";
+import Link from "next/link";
+import SubsSideBar from "./SubsSideBar";
+import { ClipLoader } from "react-spinners";
 
 function SubsDetail() {
   const router = useRouter();
@@ -30,12 +31,18 @@ function SubsDetail() {
   const subNameMatch = pathname.match(/\/c\/([^/]+)$/);
   const subName = subNameMatch ? subNameMatch[1] : null;
 
+  // 페이지네이션
+  const [pageIndex, setPageIndex] = useState(0);
+  const currentPage = pageIndex + 1;
+
   const {
     data: sub,
     error,
     mutate,
   } = useSWR(
-    subName ? `http://localhost:4000/api/subs/${subName}` : null,
+    subName
+      ? `http://localhost:4000/api/subs/${subName}?page=${pageIndex}`
+      : null,
     fetcher
   );
 
@@ -87,9 +94,13 @@ function SubsDetail() {
   let renderPosts;
 
   if (!sub) {
-    renderPosts = <p>로딩 중입니다.</p>;
+    renderPosts = (
+      <p className="absolute top-1/2 left-1/2">
+        <ClipLoader color="#000000" size={40} />
+      </p>
+    );
   } else if (sub.posts.length === 0) {
-    renderPosts = <p>작성된 포스트가 없습니다.</p>;
+    renderPosts = <p className="px-2 py-4 mt-10">작성된 포스트가 없습니다.</p>;
   } else {
     renderPosts = sub.posts.map((post: Post) => (
       <SubsPostCard key={post.identifier} post={post} subMutate={mutate} />
@@ -131,82 +142,132 @@ function SubsDetail() {
     }
   };
 
+  console.log("sub?.joinedUsers : ", sub?.joinedUsers);
+
   return (
-    <div className="w-full flex flex-col">
-      <div className="w-full">
-        {/* 현재 유저와 서브의 유저가 동일할 때만 삭제 버튼 렌더링 */}
-        {(ownSub || isAdmin) && (
-          <button
-            className="bg-blue-500 p-1 text-white"
-            onClick={() => deleteSub(subName)}
-          >
-            삭제하기
-          </button>
-        )}
-        <button
-          className="bg-red-400 text-white px-2 py-1 ml-3"
-          onClick={() => followSub(subName)}
-        >
-          팔로우하기
-        </button>
-        {/* 존재하지 않을 때 컴포넌트 랜더링 */}
+    <div className="w-full flex-grow flex flex-col bg-white">
+      <div className="w-full ">
         {sub && (
           <div className="">
-            <div className="">
+            <div className="relative">
               <input
                 type="file"
                 hidden={true}
                 ref={fileInputRef}
                 onChange={uploadImage}
               />
-              <div className="bg-gray-400">
+              <div className="bg-gray-400 relative">
                 {sub.bannerUrl ? (
                   <img
                     src={sub.bannerUrl}
                     alt=""
-                    className="w-full h-40 cursor-pointer object-cover"
+                    className="w-full h-20 md:h-40 cursor-pointer object-cover mb-1"
                     onClick={() => openFileInput("banner")}
                   />
                 ) : (
-                  // <div
-                  //   className="h-56 w-full"
-                  //   style={{
-                  //     backgroundImage: `url(${sub.bannerUrl})`,
-                  //     backgroundRepeat: "no-repeat",
-                  //     backgroundSize: "cover",
-                  //     backgroundPosition: "center",
-                  //   }}
-                  //   onClick={() => openFileInput("banner")}
-                  // ></div>
                   <div
-                    className="h-40 w-full bg-blue-200 object-cover cursor-pointer"
+                    className="h-20 md:h-40 w-full bg-blue-200 object-cover cursor-pointer mb-1"
                     onClick={() => openFileInput("banner")}
                   ></div>
                 )}
               </div>
-              <div>
+              <div className="flex items-center ml-3">
                 {sub.imageUrl && (
                   <img
                     src={sub.imageUrl}
                     alt=""
-                    className="w-20 h-20 rounded-full cursor-pointer"
+                    className="w-20 h-20 md:w-28 md:h-28 shrink-0 object-cover overflow-hidden rounded-full cursor-pointer mr-3"
                     onClick={() => openFileInput("image")}
                   />
                 )}
+                <div className="flex flex-col">
+                  <div className="">
+                    <h1 className="font-bold text-lg">{sub.title}</h1>
+                    <h1 className="text-sm">{sub.name}</h1>
+                  </div>
+                  {/* 현재 유저와 서브의 유저가 동일할 때만 삭제 버튼 렌더링 */}
+                  <div className="">
+                    {(ownSub || isAdmin) && (
+                      <button
+                        className="bg-red-400 text-white text-sm px-3 py-1 md:py-2 w-fit h-fit mt-1 rounded-full hover:opacity-60 mr-2"
+                        onClick={() => deleteSub(subName)}
+                      >
+                        삭제하기
+                      </button>
+                    )}
+                    <button
+                      className="bg-blue-400 text-white text-sm px-3 py-1 md:py-2 w-fit h-fit mt-1 rounded-full hover:opacity-60"
+                      onClick={() => followSub(subName)}
+                    >
+                      팔로우하기
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h1 className="font-bold text-lg">{sub.title}</h1>
-                <h1 className="text-sm">{sub.name}</h1>
+              <div className="mt-5 px-2">
+                <div className="flex flex-col mb-2">
+                  <div className="flex flex-row items-center mr-4">
+                    <p className="mb-1 mr-4">
+                      🎂 {dayjs(sub?.createdAt).format("YYYY년 MM월 DD일")}
+                    </p>
+                    <p className="text-sm text-gray-500 mr-1">by</p>
+                    <Link
+                      href={`/u/${sub.username}`}
+                      className="cursor-pointer hover:font-bold"
+                    >
+                      <p>@ {sub?.username}</p>
+                    </Link>
+                  </div>
+                  <div className="flex flex-row">
+                    <div className="flex flex-row items-center mr-5">
+                      <p>{sub?.postCount || 0}</p>
+                      <p className="text-sm text-gray-500">
+                        개의 포스트가 있어요.
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center">
+                      <p>{sub?.joinedUsers?.length || 0}</p>
+                      <p className="text-sm text-gray-500">명이 함께 합니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs md:text-sm text-gray-600 md:max-w-xl mb-2">
+                  {sub?.description}
+                </p>
+                <div className="mb-4">
+                  <Link
+                    href={`/c/${sub?.name}/new`}
+                    className="px-2 py-1 bg-gray-200 cursor-pointer hover:font-bold rounded-full text-sm"
+                  >
+                    이 커뮤니티에 포스트 생성하기 ✏️
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
-      <div className="flex flex-row">
-        <div className="w-4/5">{renderPosts}</div>
-        <div className="w-1/5">
-          <SubsSideBar sub={sub} />
-        </div>
+      <div className="border-t border-gray-300 grid md:grid-cols-2 grid-cols-1 gap-1">
+        {renderPosts}
+      </div>
+      <div className="flex flex-row justify-between my-5 px-5">
+        <button
+          onClick={() => {
+            if (pageIndex > 0) {
+              setPageIndex(pageIndex - 1);
+            }
+          }}
+          className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:opacity-60"
+        >
+          이전페이지
+        </button>
+        <p className="text-bold p-2 mx-5">{currentPage}</p>
+        <button
+          onClick={() => setPageIndex(pageIndex + 1)}
+          className="px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:opacity-60"
+        >
+          다음페이지
+        </button>
       </div>
     </div>
   );

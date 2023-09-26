@@ -51,18 +51,20 @@ function EditComment() {
   };
 
   return (
-    <div className="w-full">
-      <form onSubmit={handleSubmit}>
+    <div className="w-full pt-5 px-3 max-w-xl mx-auto">
+      <form onSubmit={handleSubmit} className="">
         <input
           type="text"
           placeholder="댓글 내용"
-          className="p-2 border border-gray-300"
+          className="p-2 border border-gray-300 w-full rounded-lg"
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
-        <button className="bg-blue-500 text-white px-2 py-1 w-20">
-          수정 완료
-        </button>
+        <div className="flex justify-end self-end">
+          <button className="bg-blue-500 rounded-full text-white px-2 py-1 w-20 mt-3 hover:opacity-60">
+            수정 완료
+          </button>
+        </div>
       </form>
     </div>
   );
