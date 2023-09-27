@@ -13,7 +13,7 @@ function page() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-white">
-      <h1 className="py-3">로그인</h1>
+      <h1 className="pb-3 text-lg font-semibold">로그인</h1>
       <Login />
     </div>
   );

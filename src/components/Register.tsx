@@ -10,6 +10,7 @@ function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>("");
+  // const [verificationCode, setVerificationCode] = useState("");
 
   let router = useRouter();
 
@@ -33,6 +34,26 @@ function Register() {
     }
   };
 
+  // const handleVerificationSubmit = async () => {
+  //   try {
+  //     const res = await axios.post(
+  //       "http://localhost:4000/api/auth/verify-code",
+  //       {
+  //         email,
+  //         verificationCode,
+  //       }
+  //     );
+
+  //     if (res.data.success) {
+  //       router.push("/login");
+  //     } else {
+  //       setErrors(res.data.errors || {});
+  //     }
+  //   } catch (error: any) {
+  //     setErrors(error.response.data || {});
+  //   }
+  // };
+
   return (
     <div className="flex flex-col w-full h-grow px-3 md:max-w-xl">
       <form onSubmit={handleSubmit} className="">
@@ -48,6 +69,24 @@ function Register() {
           setValue={setEmail}
           error={errors.email}
         />
+        {/* <div className="flex flex-row py-2">
+          <input
+            placeholder="인증번호를 입력하세요."
+            type="number"
+            className="bg-gray-200 px-2 py-1 rounded-full"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+          />
+          <button className="bg-blue-400 px-2 py-1 rounded-full text-white">
+            인증번호 전송하기
+          </button>
+          <button
+            className="bg-blue-400 px-2 py-1 rounded-full text-white"
+            onClick={handleVerificationSubmit}
+          >
+            인증하기
+          </button>
+        </div> */}
         <InputGroup
           placeholder="비밀번호"
           type={password}

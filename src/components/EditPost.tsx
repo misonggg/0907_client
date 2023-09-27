@@ -1,9 +1,9 @@
 "use client";
-import { useAuthState } from "@/context/auth";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
 
 function EditPost() {
   const [title, setTitle] = useState("");
@@ -117,14 +117,14 @@ function EditPost() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col px-10">
-      <p>게시물 수정하기</p> {/* 수정된 제목 */}
-      <form onSubmit={handleSubmit} className="relative">
+    <div className="w-full flex flex-col px-3 md:max-w-2xl mx-auto">
+      <p className="py-2 text-lg font-semibold">게시물 수정하기</p>
+      <form onSubmit={handleSubmit} className="relative flex flex-col">
         <input
           type="text"
           placeholder="제목"
           maxLength={30}
-          className="w-full  border border-gray-300 outline-none focus:border-black mb-10"
+          className="w-full border border-gray-300 outline-none focus:border-black mb-10 px-2 py-1"
           value={title}
           onChange={(e) => {
             if (e.target.value.length <= 20) {
@@ -133,7 +133,7 @@ function EditPost() {
           }}
         />
         <p
-          style={{ top: 10, right: 10 }}
+          style={{ top: 8, right: 12 }}
           className="absolute text-sm text-blue-500 select-none"
         >
           {title.trim().length}/20
@@ -147,9 +147,11 @@ function EditPost() {
           modules={modules}
           className="mb-16"
         />
-        <button className="bg-blue-500 text-white px-2 py-1 w-20">
-          수정 완료 {/* 수정된 버튼 텍스트 */}
-        </button>
+        <div className="flex self-end">
+          <button className="bg-blue-500 rounded-full text-white px-2 py-1 hover:opacity-60">
+            수정 완료
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -18,8 +18,6 @@ function FollowingSubs() {
     }
   };
 
-  console.log("유저네임 : ", user?.username);
-
   const apiUrl = `http://localhost:4000/api/users/${user?.username}/subs`;
   const { data: subs } = useSWR<Sub[]>(apiUrl, fetcher);
 
@@ -45,7 +43,7 @@ function FollowingSubs() {
           </div>
         ))}
 
-        {subs && subs.length === 0 && (
+        {(!authenticated || subs?.length === 0) && (
           <p className="text-xs p-2">팔로우하고 있는 커뮤니티가 없습니다. 🔇</p>
         )}
       </div>

@@ -47,16 +47,16 @@ function TopSubs() {
           ))}
         </div>
 
-        <div className="flex p-3 w-full">
-          {authenticated && (
+        {authenticated && (
+          <div className="flex p-3 w-full">
             <Link
               href="/community/new"
               className="bg-blue-500 px-3 py-2 text-white rounded-full text-sm w-full text-center hover:opacity-60"
             >
               커뮤니티 생성
             </Link>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

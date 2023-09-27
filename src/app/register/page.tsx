@@ -14,7 +14,7 @@ function page() {
 
   return (
     <div className="flex flex-col items-center justify-center bg-white w-full h-grow">
-      <h1 className="py-3">회원가입</h1>
+      <h1 className="py-3 text-lg font-semibold">회원가입</h1>
       <Register />
     </div>
   );

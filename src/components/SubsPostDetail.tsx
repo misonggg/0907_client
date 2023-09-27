@@ -259,18 +259,20 @@ function SubsPostDetail() {
         </div>
 
         {/* 댓글 */}
-        <div className="p-1">
+        <div className="p-1 w-full">
           {/* 댓글 리스트 */}
           {post &&
-            comments?.map((comment) => (
-              <CommentSection
-                comment={comment}
-                vote={vote}
-                postIdentifier={post!.identifier}
-                mutate={commentMutate}
-                key={comment.identifier}
-              />
-            ))}
+            comments
+              ?.filter((c) => c.parentId === null)
+              .map((comment) => (
+                <CommentSection
+                  comment={comment}
+                  vote={vote}
+                  postIdentifier={post!.identifier}
+                  mutate={commentMutate}
+                  key={comment.identifier}
+                />
+              ))}
           {authenticated ? (
             <div className="my-4 px-2">
               <div className="flex items-center px-2">

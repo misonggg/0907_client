@@ -26,7 +26,15 @@ function SubsPostCard({ post, subMutate }: Props) {
 
   const { authenticated } = useAuthState();
   const vote = async (value: number) => {
-    if (!authenticated) router.push("/login");
+    if (!authenticated) {
+      const confirmation = window.confirm(
+        "로그인이 필요합니다. 로그인하시겠습니가?"
+      );
+      if (confirmation) {
+        router.push("/login");
+      }
+      return;
+    }
 
     if (value === post.userVote) value = 0;
 

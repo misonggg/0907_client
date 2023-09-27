@@ -104,12 +104,12 @@ function SearchPage() {
                 <div className="flex flex-col">
                   <div className="flex">
                     <Link
-                      href={`/c/${sub.subname}`}
+                      href={`/c/${sub.name}`}
                       className="font-semibold hover:underline mr-2"
                     >
                       {sub.name}
                     </Link>
-                    <p>[ 👨‍👩‍👧‍👧 {sub.joinUsers?.length || 0} ]</p>
+                    <p>[ 👨‍👩‍👧‍👧 {sub.joinedUsers?.length || 0} ]</p>
                   </div>
                   <p className="text-sm text-gray-500">
                     {dayjs(sub.createdAt).format("YYYY년 MM월 DD일 생성")}

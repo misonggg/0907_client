@@ -10,6 +10,7 @@ import SubsPostCard from "./SubsPostCard";
 import Link from "next/link";
 import SubsSideBar from "./SubsSideBar";
 import { ClipLoader } from "react-spinners";
+import classNames from "classnames";
 
 function SubsDetail() {
   const router = useRouter();
@@ -43,12 +44,6 @@ function SubsDetail() {
     subName
       ? `http://localhost:4000/api/subs/${subName}?page=${pageIndex}`
       : null,
-    fetcher
-  );
-
-  // 아직 사용 중이 아님
-  const { data: joinedUsers, error: joinedUsersError } = useSWR(
-    subName ? `http://localhost:4000/api/subs/${subName}/joinedUsers` : null,
     fetcher
   );
 
@@ -120,7 +115,7 @@ function SubsDetail() {
     }
   };
 
-  const followSub = async (subName: any) => {
+  const followSub = async (subName: any, type: "follow" | "unfollow") => {
     if (!authenticated) {
       const confirmation = window.confirm(
         "로그인이 필요합니다. 로그인하시겠습니까?"
@@ -132,9 +127,13 @@ function SubsDetail() {
     }
 
     try {
-      await axios.post(`http://localhost:4000/api/subs/${subName}`);
-      console.log("함수 동작");
-      // isFollowing을 true로 설정해줌
+      const endpoint =
+        type === "follow"
+          ? `http://localhost:4000/api/subs/follow/${subName}`
+          : `http://localhost:4000/api/subs/unfollow/${subName}`;
+
+      await axios.post(endpoint);
+
       mutate();
       return;
     } catch (error) {
@@ -142,7 +141,10 @@ function SubsDetail() {
     }
   };
 
-  console.log("sub?.joinedUsers : ", sub?.joinedUsers);
+  // 현재 로그인한 사용자의 username이 joinedUsers 배열에 있는지 확인
+  const isUserJoined = sub?.joinedUsers?.some(
+    (u: any) => u.username === user?.username
+  );
 
   return (
     <div className="w-full flex-grow flex flex-col bg-white">
@@ -196,10 +198,18 @@ function SubsDetail() {
                       </button>
                     )}
                     <button
-                      className="bg-blue-400 text-white text-sm px-3 py-1 md:py-2 w-fit h-fit mt-1 rounded-full hover:opacity-60"
-                      onClick={() => followSub(subName)}
+                      className={classNames(
+                        "text-sm text-white px-3 py-1 md:py-2 w-fit h-fit mt-1 rounded-full hover:opacity-60",
+                        {
+                          "bg-blue-400": !isUserJoined,
+                          "bg-red-400": isUserJoined,
+                        }
+                      )}
+                      onClick={() =>
+                        followSub(subName, isUserJoined ? "unfollow" : "follow")
+                      }
                     >
-                      팔로우하기
+                      {isUserJoined ? "언팔로우하기" : "팔로우하기"}
                     </button>
                   </div>
                 </div>

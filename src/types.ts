@@ -53,4 +53,6 @@ export interface Comment {
   post?: Post;
   userVote: number;
   voteScore: number;
+  childComments: Comment[];
+  parentId: number;
 }

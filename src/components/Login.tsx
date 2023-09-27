@@ -58,15 +58,14 @@ function Login() {
           로그인하기
         </button>
       </form>
-      <small className="py-1 pt-2">
+      <small className="pt-3">
         아직 아이디가 없나요?
-        <Link href="/register" className="text-blue-500">
+        <Link href="/register" className="text-blue-500 ml-3">
           회원가입
         </Link>
       </small>
-      <small className="py-3">
-        비밀번호를 까먹었다면,
-        <Link href="/register" className="text-blue-500">
+      <small className="pt-1 self-end">
+        <Link href="/register" className="text-gray-400 hover:text-black">
           비밀번호 찾기
         </Link>
       </small>
